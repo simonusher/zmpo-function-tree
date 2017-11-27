@@ -3,6 +3,8 @@
 #include "constants.h"
 #include "stringOps.h"
 #include <vector>
+#include "Tree.h"
+#include <cmath>
 const enum NodeType {
 	OperationSum,
 	OperationSub,
@@ -27,11 +29,13 @@ const int DEFAULT_CONSTANT = 1;
 class Node {
 	friend class Tree;
 public:
-	Node();
 	Node(Tree* parentTree);
+	Node(Node &otherNode, Tree* parentTree);
+	~Node();
 	int parseString(std::string &stringToParse, int startIndex);
 	std::string printNodes();
 private:
+	double computeValue();
 	int nodeType;
 	Tree *parentTree;
 	std::vector<Node*> children;
