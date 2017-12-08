@@ -10,6 +10,7 @@ Interface::~Interface() {
 }
 
 void Interface::run() {
+	std::cout << HELP_PROMPT;
 	while (!finished) {
 		printCommandPrompt();
 		readCommand();

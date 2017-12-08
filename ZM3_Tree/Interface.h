@@ -31,6 +31,7 @@ const std::string PROMPT_ERROR_WHILE_PARSING_FORMULA = "An error occured while p
 const std::string PROMPT_ERROR_WHILE_PARSING_FORMULA_FOR_NEW_TREE = "An error occured while parsing formula for the second tree. This is the new tree: ";
 //utility strings
 const std::string COMMAND_PROMPT = "$";
+const std::string HELP_PROMPT = "Accepted commands: \nenter <formula> - creates new tree using <formula>\nvars - prints variables in current tree\nprint - prints current tree in RPN\ncomp <var0> <var1>...<varN> - computes current formula using provided environment\njoin <formula> - creates new tree using <formula> and attatches it to existing tree\n";
 
 class Interface {
 public:

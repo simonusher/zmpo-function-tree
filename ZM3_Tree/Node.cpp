@@ -83,9 +83,10 @@ int Node::parseString(std::string &stringToParse, int startIndex) {
 				this->parentTree->errorCode = ERROR_WHILE_PARSING_FORMULA;
 			}
 			if (expression.length() == 0) {
-				numberOfChildren = 0;
-				this->nodeType = NodeType::Constant;
-				this->constantValue = DEFAULT_CONSTANT;
+				return this->parseString(stringToParse, currentIndex); //TODO: ASK WHICH OPTION IS BETTER: REPLACING TRASH WITH 1 OR SKIPPING IT COMPLETELY
+				//numberOfChildren = 0;
+				//this->nodeType = NodeType::Constant;
+				//this->constantValue = DEFAULT_CONSTANT;
 			}
 			else {
 				numberOfChildren = 0;
