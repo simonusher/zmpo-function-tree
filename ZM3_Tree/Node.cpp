@@ -6,11 +6,11 @@ Node::Node(Tree *parentTree) {
 
 Node::Node(Node &otherNode, Tree *parentTree) {
 	this->parentTree = parentTree;
-	int nodeType = otherNode.nodeType;
-	if (nodeType == NodeType::Constant) {
+	this->nodeType = otherNode.nodeType;
+	if (this->nodeType == NodeType::Constant) {
 		this->constantValue = otherNode.constantValue;
 	}
-	else if (nodeType == NodeType::Variable) {
+	else if (this->nodeType == NodeType::Variable) {
 		this->variableName = otherNode.variableName;
 	}
 	for (int i = 0; i < otherNode.children.size(); i++) {
@@ -37,7 +37,7 @@ int Node::parseString(std::string &stringToParse, int startIndex) {
 	if (startIndex >= stringLength) {
 		this->nodeType = NodeType::Constant;
 		this->constantValue = DEFAULT_CONSTANT;
-		this->parentTree->errorCode = ERROR_WHILE_PARSING_STRING;
+		this->parentTree->errorCode = ERROR_WHILE_PARSING_FORMULA;
 		return startIndex;
 	}
 	else {
@@ -46,6 +46,7 @@ int Node::parseString(std::string &stringToParse, int startIndex) {
 			currentIndex++;
 		}
 		expression = stringToParse.substr(startIndex, currentIndex - startIndex);
+
 		int numberOfChildren;
 
 		if (expression == OPERATION_SUM) {
@@ -72,21 +73,27 @@ int Node::parseString(std::string &stringToParse, int startIndex) {
 			numberOfChildren = 1;
 			this->nodeType = NodeType::OperationCos;
 		}
-		else if (stringOps::isNumber(expression)) {
+		else if (isNumber(expression)) {
 			numberOfChildren = 0;
 			this->nodeType = NodeType::Constant;
 			this->constantValue = std::atoi(expression.c_str());
 		}
-		else if (expression.length() == 0) {
-			numberOfChildren = 0;
-			this->nodeType = NodeType::Constant;
-			this->constantValue = DEFAULT_CONSTANT;
-		}
 		else {
-			numberOfChildren = 0;
-			this->nodeType = NodeType::Variable;
-			this->variableName = expression;
-			this->parentTree->addVariable(expression);
+			if (removeForbiddenChars(expression)) {
+				this->parentTree->errorCode = ERROR_WHILE_PARSING_FORMULA;
+			}
+			if (expression.length() == 0) {
+				numberOfChildren = 0;
+				this->nodeType = NodeType::Constant;
+				this->constantValue = DEFAULT_CONSTANT;
+			}
+			else {
+				numberOfChildren = 0;
+				this->nodeType = NodeType::Variable;
+				this->variableName = expression;
+				this->parentTree->addVariable(expression);
+			}
+			
 		}
 
 		Node *child;
@@ -142,6 +149,59 @@ std::string Node::printNodes() {
 	return result;
 }
 
+std::string Node::printONPFormula() {
+	std::string result;
+	switch (nodeType) {
+	case Variable:
+		result = variableName;
+		break;
+	case Constant:
+		result = std::to_string(this->constantValue);
+		break;
+	case OperationCos:
+		result = "cos " + children.at(0)->printONPFormula();
+		break;
+	case OperationSin:
+		result = "sin " + children.at(0)->printONPFormula();
+		break;
+	case OperationSum:
+		result = "+ " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		break;
+	case OperationSub:
+		result = "- " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		break;
+	case OperationMult:
+		result = "* " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		break;
+	case OperationDiv:
+		result = "/ " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		break;
+	}
+	return result;
+}
+
+
+void Node::attachAtLeaf(Node &otherNode) {
+	int childIndex = std::rand() % this->children.size();
+	Node *child = this->children.at(childIndex);
+	if (child->nodeType == Constant || child->nodeType == Variable) {
+		delete child;
+		this->children[childIndex] = new Node(otherNode, this->parentTree);
+	}
+	else {
+		child->attachAtLeaf(otherNode);
+	}
+}
+
+void Node::updateVariables() {
+	if (this->nodeType == NodeType::Variable) {
+		this->parentTree->addVariable(this->variableName);
+	}
+	for each (Node* child in children) {
+		child->updateVariables();
+	}
+}
+
 double Node::computeValue() {
 	switch (this->nodeType) {
 	case OperationSum:
@@ -170,4 +230,25 @@ double Node::computeValue() {
 		break;
 	}
 	return 0;
+}
+
+bool Node::removeForbiddenChars(std::string &expression) {
+	bool containsForbiddenChars = false;
+	int currentPos = 0;
+	int currentExpressionLength = expression.length();
+	while (currentPos < currentExpressionLength) {
+		if (!isalnum(expression.at(currentPos))) {
+			expression.erase(currentPos, 1);
+			currentExpressionLength = expression.length();
+			containsForbiddenChars = true;
+		}
+		else {
+			currentPos++;
+		}
+	}
+	return containsForbiddenChars;
+}
+
+bool Node::isNumber(const std::string &string) {
+	return string.find_first_not_of("0123456789") == std::string::npos;
 }

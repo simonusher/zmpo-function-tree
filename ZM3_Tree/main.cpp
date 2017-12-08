@@ -1,23 +1,29 @@
-#include "Node.h"
+#include <vld.h>
 #include <iostream>
+#include "TreeManager.h"
 void main() {
-	Tree *t = new Tree();
-	Tree *t2 = new Tree();
-	std::string expression = "cos + a b";
-	t->parseExpression(expression);
-	t2 = t;
-	std::cout << t->printNodes();
+	std::string expression = "cos + &@#a b";
+	std::string expression2 = "* cos * a c d";
+	TreeManager tm;
+	std::cout << tm.printTree();
 	std::cout << END_LINE;
-	std::cout << t2->printNodes();
+	tm.createNewTree(expression);
+	std::cout << tm.printTree();
 	std::cout << END_LINE;
-	std::cout << t->vars();
+	std::cout << tm.getVars();
 	std::cout << END_LINE;
-	std::cout << t2->vars();
-	std::vector<int> env;
-	env.push_back(10);
-	env.push_back(5);
+	tm.joinNewTree(expression2);
+	std::cout << tm.printTree();
 	std::cout << END_LINE;
-	std::cout << t->computeValue(&env);
+	std::cout << tm.getVars();
+	double result;
+	std::vector<int> environment;
+	environment.push_back(10);
+	environment.push_back(5);
+	environment.push_back(6);
+	std::cout << tm.computeValue(environment, result);
+	std::cout << END_LINE;
+
 	int i;
 	std::cin >> i;
 }

@@ -3,7 +3,6 @@
 Tree::Tree() {
 	this->errorCode = SUCCESS;
 	this->root = nullptr;
-
 }
 
 Tree::~Tree() {
@@ -16,6 +15,7 @@ Tree::Tree(Tree &otherTree) {
 	this->errorCode = SUCCESS;
 	if (otherTree.root != nullptr) {
 		this->root = new Node(*otherTree.root, this);
+		this->variables = otherTree.variables;
 	}
 	else {
 		this->root = nullptr;
@@ -26,10 +26,18 @@ void Tree::operator=(Tree &otherTree) {
 	this->clear();
 	if (otherTree.root != nullptr) {
 		this->root = new Node(*otherTree.root, this);
+		this->variables = otherTree.variables;
 	}
 	else {
 		this->root = nullptr;
 	}
+}
+
+Tree Tree::operator+(Tree &otherTree) {
+	Tree newTree(*this);
+	newTree.attachOtherTree(otherTree);
+	newTree.updateVariables();
+	return newTree;
 }
 
 
@@ -60,9 +68,23 @@ std::string Tree::printNodes() {
 		return this->root->printNodes();
 	}
 }
+std::string Tree::printONPFormula() {
+	if (this->root == nullptr) {
+		return MSG_TREE_EMPTY;
+	}
+	else {
+		return this->root->printONPFormula();
+	}
+}
 void Tree::addVariable(std::string variable) {
 	if (std::find(variables.begin(), variables.end(), variable) == variables.end()) {
 		variables.push_back(variable);
+	}
+}
+void Tree::updateVariables() {
+	if (this->root != nullptr) {
+		this->variables.clear();
+		this->root->updateVariables();
 	}
 }
 std::string Tree::vars() {
@@ -87,16 +109,17 @@ std::string Tree::vars() {
 	}
 }
 
-double Tree::computeValue(std::vector<int> *environment) {
+int Tree::computeValue(std::vector<int> *environment, double &result) {
 	if (environment->size() != this->variables.size()) {
-		//fail
+		return ERROR_INCORRECT_NUMBER_OF_VARIABLES;
 	}
 	if (this->root == nullptr) { //TODO: RETHINK OR REFACTOR
-		return 0;
+		return ERROR_TREE_NOT_CREATED;
 	}
 	else {
 		this->environment = environment;
-		return this->root->computeValue();
+		result = this->root->computeValue();
+		return SUCCESS;
 	}
 	
 }
@@ -114,6 +137,28 @@ int Tree::indexOfVariable(std::string &variableName) {
 		}
 	}
 	return index;
+}
+
+void Tree::attachOtherTree(Tree &otherTree) {
+	if (this->root == nullptr) {
+		if (otherTree.root != nullptr) {
+			this->root = new Node(*otherTree.root, this);
+			updateVariables();
+		}
+	}
+	else {
+		if (otherTree.root != nullptr) {
+			if (this->root->nodeType == Variable || this->root->nodeType == Variable) {
+				delete this->root;
+				this->root = new Node(*otherTree.root, this);
+				updateVariables();
+			}
+			else {
+				this->root->attachAtLeaf(*otherTree.root);
+				updateVariables();
+			}
+		}
+	}
 }
 
 int Tree::valueOfVariable(std::string &variableName) {
