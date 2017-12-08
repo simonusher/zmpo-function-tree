@@ -54,10 +54,13 @@ void Tree::clear() {
 int Tree::parseExpression(std::string &expression) {
 	this->clear();
 	this->root = new Node(this);
+	if (expression == EMPTY_STRING){
+		this->errorCode = ERROR_WHILE_PARSING_FORMULA;
+	}
 	root->parseString(expression, 0);
 	int currentErrorCode = this->errorCode;
 	this->errorCode = SUCCESS;
-	return this->errorCode;
+	return currentErrorCode;
 }
 
 std::string Tree::printNodes() {

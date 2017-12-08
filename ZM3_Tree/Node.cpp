@@ -182,14 +182,20 @@ std::string Node::printONPFormula() {
 
 
 void Node::attachAtLeaf(Node &otherNode) {
-	int childIndex = std::rand() % this->children.size();
-	Node *child = this->children.at(childIndex);
-	if (child->nodeType == Constant || child->nodeType == Variable) {
-		delete child;
-		this->children[childIndex] = new Node(otherNode, this->parentTree);
+	if (this == this->parentTree->root && this->children.size() == 0) {
+		this->parentTree->root = new Node(otherNode, this->parentTree);
+		delete this;
 	}
 	else {
-		child->attachAtLeaf(otherNode);
+		int childIndex = std::rand() % this->children.size();
+		Node *child = this->children.at(childIndex);
+		if (child->nodeType == Constant || child->nodeType == Variable) {
+			delete child;
+			this->children[childIndex] = new Node(otherNode, this->parentTree);
+		}
+		else {
+			child->attachAtLeaf(otherNode);
+		}
 	}
 }
 
