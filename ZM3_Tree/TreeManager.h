@@ -11,6 +11,7 @@ public:
 	std::string printTree();
 	int computeValue(std::vector<int> environment, double &result);
 	int joinNewTree(std::string formula);
+	int numberOfVariables(std::map<std::string, int> &varMap);
 private:
 	Tree *currentTree;
 };

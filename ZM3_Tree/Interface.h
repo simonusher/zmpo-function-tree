@@ -11,6 +11,7 @@
 const std::string COMMAND_PRINT = "print";
 const std::string COMMAND_VARS = "vars";
 const std::string COMMAND_EXIT = "exit";
+const std::string COMMAND_NUMS = "nums";
 //variable number of arguments
 const std::string COMMAND_ENTER = "enter";
 const std::string COMMAND_COMP = "comp";
@@ -59,5 +60,5 @@ private:
 	void processCommandPrint();
 	void processCommandComp();
 	void processCommandJoin();
-}
-;
+	void processCommandNums();
+};

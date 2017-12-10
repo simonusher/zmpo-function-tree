@@ -51,6 +51,9 @@ void Interface::selectAndPerformOperation() {
 		else if (currentCommand == COMMAND_JOIN) {
 			processCommandJoin();
 		}
+		else if (currentCommand == COMMAND_NUMS) {
+			processCommandNums();
+		}
 		else if (currentCommand == COMMAND_EXIT) {
 			this->finished = true;
 			programResponse = PROMPT_EXIT;
@@ -159,5 +162,24 @@ void Interface::processCommandJoin() {
 		break;
 	default:
 		programResponse = PROMPT_ERROR_WHILE_PARSING_FORMULA_FOR_NEW_TREE + treeManager->printTree();
+	}
+}
+
+void Interface::processCommandNums() {
+	std::map<std::string, int> varMap;
+	int errorCode = this->treeManager->numberOfVariables(varMap);
+	if (errorCode == ERROR_TREE_NOT_CREATED) {
+		programResponse = MSG_ERROR_TREE_NOT_CREATED;
+	}
+	else {
+		std::string result;
+		for (std::map<std::string, int>::const_iterator it = varMap.begin();
+			it != varMap.end(); ++it) {
+			result.append(it->first);
+			result.append(" ");
+			result.append(std::to_string(it->second));
+			result.append("\n");
+		}
+		programResponse = result;
 	}
 }

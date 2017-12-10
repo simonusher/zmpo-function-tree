@@ -255,3 +255,10 @@ bool Node::removeForbiddenChars(std::string &expression) {
 	}
 	return containsForbiddenChars;
 }
+
+void Node::numberOfVariables(std::map<std::string, int>& varMap) {
+	varMap[this->variableName]++;
+	for (Node *child : this->children) {
+		child->numberOfVariables(varMap);
+	}
+}

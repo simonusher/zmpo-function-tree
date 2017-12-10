@@ -127,6 +127,12 @@ int Tree::computeValue(std::vector<int> *environment, double &result) {
 	
 }
 
+int Tree::numberOfVariables(std::map<std::string, int> &varMap) {
+	if (this->root == nullptr) return ERROR_TREE_NOT_CREATED;
+	this->root->numberOfVariables(varMap);
+	return SUCCESS;
+}
+
 int Tree::indexOfVariable(std::string &variableName) {
 	bool found = false;
 	int index = 0;

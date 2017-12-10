@@ -55,3 +55,12 @@ int TreeManager::joinNewTree(std::string formula) {
 }
 
 
+int TreeManager::numberOfVariables(std::map<std::string, int> &varMap) {
+	if (this->currentTree == nullptr) {
+		return ERROR_CODES::ERROR_TREE_NOT_CREATED;
+	}
+	else {
+		int errorCode = this->currentTree->numberOfVariables(varMap);
+		return errorCode;
+	}
+}

@@ -26,6 +26,7 @@ public:
 	void clear();
 	std::string vars();
 	int computeValue(std::vector<int> *environment, double &result);
+	int numberOfVariables(std::map<std::string, int> &varMap);
 private:
 	void attachOtherTree(Tree &otherTree);
 	int valueOfVariable(std::string &variableName);

@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <cctype>
+#include <map>
 #include "Tree.h"
 #include "constants.h"
 #include "stringOps.h"
@@ -46,4 +47,5 @@ private:
 	std::string variableName;
 	int constantValue;
 	bool removeForbiddenChars(std::string &expression);
+	void numberOfVariables(std::map<std::string, int> &varMap);
 };
