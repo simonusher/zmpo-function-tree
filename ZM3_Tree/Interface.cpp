@@ -112,11 +112,21 @@ void Interface::processCommandEnter() {
 }
 
 void Interface::processCommandVars() {
-	programResponse = treeManager->getVars();
+	if (currentCommandArguments.empty()) {
+		programResponse = treeManager->getVars();
+	}
+	else {
+		programResponse = PROMPT_ERROR_INVALID_ARGUMENTS_NUMBER_FOR_COMMAND + APOSTROPHE + currentCommand + APOSTROPHE + FULL_STOP;
+	}
 }
 
 void Interface::processCommandPrint() {
-	programResponse = treeManager->printTree();
+	if (currentCommandArguments.empty()) {
+		programResponse = treeManager->printTree();
+	}
+	else {
+		programResponse = PROMPT_ERROR_INVALID_ARGUMENTS_NUMBER_FOR_COMMAND + APOSTROPHE + currentCommand + APOSTROPHE + FULL_STOP;
+	}
 }
 
 void Interface::processCommandComp() {
