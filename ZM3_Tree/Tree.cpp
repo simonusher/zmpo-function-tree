@@ -116,7 +116,7 @@ int Tree::computeValue(std::vector<int> *environment, double &result) {
 	if (environment->size() != this->variables.size()) {
 		return ERROR_INCORRECT_NUMBER_OF_VARIABLES;
 	}
-	if (this->root == nullptr) { //TODO: RETHINK OR REFACTOR
+	if (this->root == nullptr) {
 		return ERROR_TREE_NOT_CREATED;
 	}
 	else {

@@ -91,37 +91,10 @@ void Interface::printCommandPrompt() {
 	std::cout << COMMAND_PROMPT + SPACE;
 }
 
-bool Interface::isArgumentNumber(std::string &argument) {
-	return argument.find_first_not_of("0123456789") == argument.npos;
-}
-
-bool Interface::argumentOverflowsInt(std::string &argument) {
-	//check string length for overflow
-	if (argument.size() < MAX_INT_STRING_LENGTH) {
-		return false;
-	}
-	if (argument.size() > MAX_INT_STRING_LENGTH) {
-		return true;
-	}
-	else {
-		bool overflows = false;
-		std::string::const_iterator it = argument.begin();
-		std::string::const_iterator maxIntIt = MAX_INT_STRING.begin();
-		while (it != argument.end() && !overflows) {
-			if ((*maxIntIt) < (*it)) {
-				overflows = true;
-			}
-			++it;
-			++maxIntIt;
-		}
-		return overflows;
-	}
-}
-
 bool Interface::argumentsCorrect() {
 	bool isCorrect = true;
 	for (int i = 0; i < argsSplit.size() && isCorrect; i++) {
-		if (!isArgumentNumber(argsSplit.at(i)) || argumentOverflowsInt(argsSplit.at(i))) {
+		if (!stringOps::isNumber(argsSplit.at(i)) || stringOps::argumentOverflowsInt(argsSplit.at(i))) {
 			isCorrect = false;
 		}
 	}

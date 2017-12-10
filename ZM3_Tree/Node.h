@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
 #include <cstdlib>
-#include "constants.h"
-#include "stringOps.h"
 #include <vector>
-#include "Tree.h"
 #include <cmath>
 #include <cctype>
+#include "Tree.h"
+#include "constants.h"
+#include "stringOps.h"
 const enum NodeType {
 	OperationSum,
 	OperationSub,
@@ -29,15 +29,14 @@ const std::string OPERATION_COS = "cos";
 const int DEFAULT_CONSTANT = 1;
 
 class Node {
+private:
 	friend class Tree;
-public:
 	Node(Tree* parentTree);
 	Node(Node &otherNode, Tree* parentTree);
 	~Node();
 	int parseString(std::string &stringToParse, int startIndex);
 	std::string printNodes();
 	std::string printONPFormula();
-private:
 	void attachAtLeaf(Node &otherNode);
 	void updateVariables();
 	double computeValue();
@@ -47,5 +46,4 @@ private:
 	std::string variableName;
 	int constantValue;
 	bool removeForbiddenChars(std::string &expression);
-	bool isNumber(const std::string &string);
 };

@@ -73,7 +73,7 @@ int Node::parseString(std::string &stringToParse, int startIndex) {
 			numberOfChildren = 1;
 			this->nodeType = NodeType::OperationCos;
 		}
-		else if (isNumber(expression)) {
+		else if (stringOps::isNumber(expression)) {
 			numberOfChildren = 0;
 			this->nodeType = NodeType::Constant;
 			this->constantValue = std::atoi(expression.c_str());
@@ -129,22 +129,22 @@ std::string Node::printNodes() {
 		result = std::to_string(this->constantValue);
 		break;
 	case OperationCos:
-		result = "cos (" + children.at(0)->printNodes() + ")";
+		result = OPERATION_COS + SPACE + OPENING_BRACKET + children.at(0)->printNodes() + CLOSING_BRACKET;
 		break;
 	case OperationSin:
-		result = "sin (" + children.at(0)->printNodes() + ")";
+		result = OPERATION_SIN + SPACE + OPENING_BRACKET + children.at(0)->printNodes() + CLOSING_BRACKET;
 		break;
 	case OperationSum:
-		result = "(" + children.at(0)->printNodes() + " + " + children.at(1)->printNodes() + ")";
+		result = OPENING_BRACKET + children.at(0)->printNodes() + SPACE + OPERATION_SUM + SPACE + children.at(1)->printNodes() + CLOSING_BRACKET;
 		break;
 	case OperationSub:
-		result = "(" + children.at(0)->printNodes() + " - " + children.at(1)->printNodes() + ")";
+		result = OPENING_BRACKET + children.at(0)->printNodes() + SPACE + OPERATION_SUB + SPACE + children.at(1)->printNodes() + CLOSING_BRACKET;
 		break;
 	case OperationMult:
-		result = "(" + children.at(0)->printNodes() + " * " + children.at(1)->printNodes() + ")";
+		result = OPENING_BRACKET + children.at(0)->printNodes() + SPACE + OPERATION_MULT + SPACE + children.at(1)->printNodes() + CLOSING_BRACKET;
 		break;
 	case OperationDiv:
-		result = "(" + children.at(0)->printNodes() + " / " + children.at(1)->printNodes() + ")";
+		result = OPENING_BRACKET + children.at(0)->printNodes() + SPACE + OPERATION_DIV + SPACE + children.at(1)->printNodes() + CLOSING_BRACKET;
 		break;
 	}
 	return result;
@@ -160,22 +160,22 @@ std::string Node::printONPFormula() {
 		result = std::to_string(this->constantValue);
 		break;
 	case OperationCos:
-		result = "cos " + children.at(0)->printONPFormula();
+		result = OPERATION_COS + SPACE + children.at(0)->printONPFormula();
 		break;
 	case OperationSin:
-		result = "sin " + children.at(0)->printONPFormula();
+		result = OPERATION_SIN + SPACE + children.at(0)->printONPFormula();
 		break;
 	case OperationSum:
-		result = "+ " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		result = OPERATION_SUM + SPACE + children.at(0)->printONPFormula() + SPACE + children.at(1)->printONPFormula();
 		break;
 	case OperationSub:
-		result = "- " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		result = OPERATION_SUB + SPACE + children.at(0)->printONPFormula() + SPACE + children.at(1)->printONPFormula();
 		break;
 	case OperationMult:
-		result = "* " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		result = OPERATION_MULT + SPACE + children.at(0)->printONPFormula() + SPACE + children.at(1)->printONPFormula();
 		break;
 	case OperationDiv:
-		result = "/ " + children.at(0)->printONPFormula() + " " + children.at(1)->printONPFormula();
+		result = OPERATION_DIV + SPACE + children.at(0)->printONPFormula() + SPACE + children.at(1)->printONPFormula();
 		break;
 	}
 	return result;
@@ -254,8 +254,4 @@ bool Node::removeForbiddenChars(std::string &expression) {
 		}
 	}
 	return containsForbiddenChars;
-}
-
-bool Node::isNumber(const std::string &string) {
-	return string.find_first_not_of("0123456789") == std::string::npos;
 }
